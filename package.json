@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "concurrently": "^9.1.2",
+    "dotenv": "^16.4.7",
+    "fs": "^0.0.1-security",
+    "playwright": "^1.51.1",
+    "puppeteer": "^24.5.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
+  },
+  "scripts": {
+    "dev": "concurrently -n \"frontend,backend\" -c \"bgBlue,bgGreen\" \"cd frontend && npm run dev\" \"cd backend && nodemon index.js\""
+  }
+}
