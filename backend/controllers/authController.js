@@ -56,7 +56,7 @@ const loginUser = async (req, res) => {
             _id: user.id,
             name: user.name,
             email: user.email,
-            toekn: generateToken(user.id),
+            token: generateToken(user.id),
         });
     } else {
         res.status(401).json({
@@ -81,4 +81,38 @@ const getUserProfile = async (req, res) => {
     }
 };
 
-module.exports = { registerUser, loginUser, getUserProfile };
+// Update user profile
+const updateUserProfile = async (req, res) => {
+    const user = await User.findById(req.user.id);
+
+    if (user) {
+        user.skills = req.body.skills || user.skills;
+        user.experience = req.body.experience || user.experience;
+        user.education = req.body.education || user.education;
+        user.location = req.body.location || user.location;
+        user.aboutMe = req.body.aboutMe || user.aboutMe;
+        user.projects = req.body.projects || user.projects;
+
+        const updatedUser = await user.save();
+
+        res.json({
+            success: true,
+            message: "Profile updated successfully",
+            user: {
+                name: updatedUser.name,
+                email: updatedUser.email,
+                skills: updatedUser.skills,
+                experience: updatedUser.experience,
+                education: updatedUser.education,
+                location: updatedUser.location,
+                aboutMe: updatedUser.aboutMe,
+                projects: updatedUser.projects,
+            },
+        });
+    } else {
+        res.status(404).json({ success: false, message: "User not found" });
+    }
+};
+
+
+module.exports = { registerUser, loginUser, getUserProfile, updateUserProfile };

@@ -15,24 +15,31 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+
+    // Additional fields
+    skills: { type: [String], default: [] },
+    experience: { type: String, default: "" },
+    education: { type: String, default: "" },
+    location: { type: String, default: "" },
+    aboutMe: { type: String, default: "" },
+    projects: { type: [String], default: [] },
 });
 
-//Hash Password befor saving
+// Hash Password before saving
 userSchema.pre("save", async function (next) {
-    if(!this.isModified("password")) 
-        return next();
-    
+    if (!this.isModified("password")) return next();
+
     try {
         const saltRounds = 10;
         const salt = await bcrypt.genSalt(saltRounds);
         this.password = await bcrypt.hash(this.password, salt);
         next();
-    } catch(error) {
+    } catch (error) {
         next(error);
     }
 });
 
-//Compare passwords
+// Compare passwords
 userSchema.methods.matchPassword = async function (enterPassword) {
     return await bcrypt.compare(enterPassword, this.password);
 };

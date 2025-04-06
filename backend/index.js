@@ -6,7 +6,7 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const jobRoutes = require('./routes/jobRoutes');
 const { exec } = require("child_process");
-
+const generateCoverLetterRoute = require("./routes/generateCoverLetter");
 
 const app = express();
 app.use(cors());
@@ -19,9 +19,15 @@ app.get("/", (req,res) => {
     });
 });
 
+// ✅ Add these middlewares
+
+app.use(express.urlencoded({ extended: true }));
 //Routes
 app.use("/api/v1/auth", authRoutes);
 app.use('/api/v1/jobs', jobRoutes);
+app.use("/api/v1/cover-letter", generateCoverLetterRoute);
+
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, ()=> console.log(`Server is runnig on PORT : ${PORT}`));

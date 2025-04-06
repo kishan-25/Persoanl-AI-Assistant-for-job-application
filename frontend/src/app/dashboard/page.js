@@ -55,17 +55,7 @@ export default function DashboardPage() {
                                 <h3 className="font-semibold">{job.title || "No title"}</h3>
                                 <p>{job.company || "Unknown company"}</p>
                                 <p>{job.location || "Location not specified"}</p>
-                                <button
-                                        onClick={() =>
-                                            router.push(
-                                            `/apply?title=${encodeURIComponent(job.title)}&company=${encodeURIComponent(job.company)}&description=${encodeURIComponent(job.description || "")}`
-                                            )
-                                        }
-                                        className="mt-2 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
-                                        >
-                                        Apply
-                                </button>
-
+                                <button onClick={() => router.push(`/dashboard/apply?jobId=${job._id}&source=times`)}>Apply</button>
                             </li>
                         ))}
                     </ul>
@@ -79,16 +69,7 @@ export default function DashboardPage() {
                                 <h3 className="font-semibold">{job.title || "No title"}</h3>
                                 <p>{job.company || "Unknown company"}</p>
                                 <p>{job.location || "Location not specified"}</p>
-                                <button
-                                    onClick={() =>
-                                        router.push(
-                                        `/apply?title=${encodeURIComponent(job.title)}&company=${encodeURIComponent(job.company)}&description=${encodeURIComponent(job.description || "")}`
-                                        )
-                                    }
-                                    className="mt-2 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
-                                    >
-                                    Apply
-                                </button>
+                                <button onClick={() => router.push(`/dashboard/apply?jobId=${job._id}&source=times`)}>Apply</button>
                             </li>
                         ))}
                     </ul>
