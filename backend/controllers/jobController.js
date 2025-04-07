@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { errors } = require("playwright");
 
 const getTelegramJobs = async (req, res) => {
     try {
