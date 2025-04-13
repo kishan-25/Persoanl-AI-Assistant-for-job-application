@@ -1,3 +1,4 @@
+// src/services/authService.js
 "use client"
 import axios from "axios";
 
@@ -17,27 +18,50 @@ export const removeToken = () => {
 };
 
 export const loginUser = async (userData) => {
-    try {
-        const response = await axios.post(`${API_URL}/login`, userData);
-        
-        // Store the token when login is successful
-        if (response.data.success && response.data.token) {
-          setToken(response.data.token);
-        }
-        
-        return response.data;
-      } catch (error) {
-        console.error("Login API Error:", error.response?.data || error.message);
-        throw error.response?.data || error.message;
-      };
+  try {
+    const response = await axios.post(`${API_URL}/login`, userData);
+    
+    // Store the token when login is successful
+    if (response.data.success && response.data.token) {
+      setToken(response.data.token);
+      
+      // Also store user data for persistent sessions
+      localStorage.setItem('userData', JSON.stringify(response.data));
+    }
+    
+    return response.data;
+  } catch (error) {
+    console.error("Login API Error:", error.response?.data || error.message);
+    throw error;
+  }
 };
 
-export const registerUser = async(userData) => {
-    try {
-        const response = await axios.post(`${API_URL}/register`, userData);
-        return response.data;
-    } catch (error) {
-        console.error("Register API Error:", error.response?.data || error.message);
-        throw error.response?.data || error.message;
+export const registerUser = async (userData) => {
+  try {
+    const response = await axios.post(`${API_URL}/register`, userData);
+    
+    // Store token and user data for new registrations too
+    if (response.data.success && response.data.token) {
+      setToken(response.data.token);
+      localStorage.setItem('userData', JSON.stringify(response.data));
     }
+    
+    return response.data;
+  } catch (error) {
+    console.error("Register API Error:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const getUserFromLocalStorage = () => {
+  if (typeof window !== 'undefined') {
+    const userData = localStorage.getItem('userData');
+    return userData ? JSON.parse(userData) : null;
+  }
+  return null;
+};
+
+export const logoutUser = () => {
+  removeToken();
+  localStorage.removeItem('userData');
 };

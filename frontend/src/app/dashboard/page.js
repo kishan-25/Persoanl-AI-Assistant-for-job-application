@@ -1,17 +1,28 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { logout } from "@/redux/slices/authSlice";
 import AuthGuard from "@/utils/authGuard";
 import { fetchTelegramJobs, fetchTimesJobs } from "@/services/jobService";
+import { calculateSkillMatch, getMatchColor } from "@/utils/jobMatching";
+import { getUserFromLocalStorage } from "@/services/authService";
+import Navbar from "@/components/Navbar";
 
 export default function DashboardPage() {
     const [telegramJobs, setTelegramJobs] = useState([]);
     const [timesJobs, setTimesJobs] = useState([]);
+    const [activeTab, setActiveTab] = useState("telegram");
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+    
     const dispatch = useDispatch();
     const router = useRouter();
+    const { user } = useSelector((state) => state.auth);
+    
+    // Get user data from local storage if not in redux state
+    const userData = user || getUserFromLocalStorage();
 
     const handleLogout = () => {
         dispatch(logout());
@@ -20,60 +31,193 @@ export default function DashboardPage() {
 
     useEffect(() => {
         const getJobs = async () => {
+            setLoading(true);
             try {
                 const telegramRes = await fetchTelegramJobs();
                 const timesRes = await fetchTimesJobs();
 
-                if (telegramRes.success) setTelegramJobs(telegramRes.jobs);
-                if (timesRes.success) setTimesJobs(timesRes.jobs);
+                if (telegramRes.success) {
+                    // Calculate skill match for telegram jobs
+                    const jobsWithMatch = telegramRes.jobs.map(job => ({
+                        ...job,
+                        matchPercentage: calculateSkillMatch(
+                            userData?.skills || [], 
+                            job.text || job.title || ""
+                        )
+                    }));
+                    
+                    // Sort jobs by match percentage (highest first)
+                    setTelegramJobs(jobsWithMatch.sort((a, b) => b.matchPercentage - a.matchPercentage));
+                }
+                
+                if (timesRes.success) {
+                    // Calculate skill match for times jobs
+                    const jobsWithMatch = timesRes.jobs.map(job => ({
+                        ...job,
+                        matchPercentage: calculateSkillMatch(
+                            userData?.skills || [], 
+                            job.keySkills || job.title || ""
+                        )
+                    }));
+                    
+                    // Sort jobs by match percentage (highest first)
+                    setTimesJobs(jobsWithMatch.sort((a, b) => b.matchPercentage - a.matchPercentage));
+                }
+                
+                setLoading(false);
             } catch (error) {
                 console.error("Failed to fetch jobs", error);
+                setError("Failed to load jobs. Please try again later.");
+                setLoading(false);
             }
         };
 
-        getJobs();
-    }, []);
+        if (userData) {
+            getJobs();
+        }
+    }, [userData]);
+
+    const renderJobCard = (job, source) => {
+        return (
+            <div className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow">
+                <div className="flex justify-between">
+                    <h3 className="font-semibold text-lg">{job.title || "No title"}</h3>
+                    <div className={`${getMatchColor(job.matchPercentage)} font-bold text-lg`}>
+                        {job.matchPercentage}% Match
+                    </div>
+                </div>
+                
+                <p className="text-gray-700 mt-2">{job.company || "Unknown company"}</p>
+                
+                {job.location && <p className="text-gray-600 mt-1">📍 {job.location}</p>}
+                
+                {source === "times" && job.keySkills && (
+                    <div className="mt-2">
+                        <p className="text-sm font-medium">Key Skills:</p>
+                        <p className="text-sm text-gray-600">{job.keySkills}</p>
+                    </div>
+                )}
+                
+                {source === "telegram" && job.role && (
+                    <div className="mt-2">
+                        <p className="text-sm font-medium">Role:</p>
+                        <p className="text-sm text-gray-600">{job.role}</p>
+                    </div>
+                )}
+                
+                <div className="mt-4 flex justify-end">
+                    <button 
+                        onClick={() => router.push(`/dashboard/apply?jobId=${job._id}&source=${source}`)}
+                        className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                    >
+                        Apply Now
+                    </button>
+                </div>
+            </div>
+        );
+    };
 
     return (
         <AuthGuard>
-            <div className="p-6 space-y-10">
-                <div className="flex justify-between items-center">
-                    <h1 className="text-3xl font-bold">Job Dashboard</h1>
-                    <button
-                        onClick={handleLogout}
-                        className="px-4 py-2 bg-red-500 text-white rounded-md shadow hover:bg-red-600"
-                    >
-                        Logout
-                    </button>
-                </div>
+            <Navbar/>
+            <div className="min-h-screen bg-gray-50 text-black">
+                <header className="bg-white shadow-sm">
+                    <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
+                        <div className="flex justify-between items-center">
+                            <h1 className="text-2xl font-bold text-gray-900">Job Dashboard</h1>
+                            <div className="flex gap-4 items-center">
+                                <button
+                                    onClick={() => router.push("/dashboard/profile")}
+                                    className="bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200"
+                                >
+                                    My Profile
+                                </button>
+                                <button
+                                    onClick={handleLogout}
+                                    className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+                                >
+                                    Logout
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </header>
 
-                <section>
-                    <h2 className="text-2xl font-semibold mb-4">Times Jobs</h2>
-                    <ul className="space-y-3">
-                        {timesJobs.map((job, i) => (
-                            <li key={i} className="p-4 border rounded-xl shadow">
-                                <h3 className="font-semibold">{job.title || "No title"}</h3>
-                                <p>{job.company || "Unknown company"}</p>
-                                <p>{job.location || "Location not specified"}</p>
-                                <button onClick={() => router.push(`/dashboard/apply?jobId=${job._id}&source=times`)}>Apply</button>
-                            </li>
-                        ))}
-                    </ul>
-                </section>
-
-                <section>
-                    <h2 className="text-2xl font-semibold mb-4">Telegram Jobs</h2>
-                    <ul className="space-y-3">
-                        {telegramJobs.map((job, i) => (
-                            <li key={i} className="p-4 border rounded-xl shadow">
-                                <h3 className="font-semibold">{job.title || "No title"}</h3>
-                                <p>{job.company || "Unknown company"}</p>
-                                <p>{job.location || "Location not specified"}</p>
-                                <button onClick={() => router.push(`/dashboard/apply?jobId=${job._id}&source=times`)}>Apply</button>
-                            </li>
-                        ))}
-                    </ul>
-                </section>
+                <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    {/* Welcome section with user info */}
+                    <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+                        <h2 className="text-xl font-semibold">Welcome, {userData?.name || "User"}!</h2>
+                        <p className="mt-2 text-gray-600">
+                            We have found jobs matching your skills: {userData?.skills?.join(", ") || "No skills added yet"}
+                        </p>
+                        {(!userData?.skills || userData.skills.length === 0) && (
+                            <div className="mt-4 p-4 bg-yellow-50 text-yellow-700 rounded-md">
+                                <p>Add skills to your profile to get better job matches!</p>
+                                <button 
+                                    onClick={() => router.push("/dashboard/profile")}
+                                    className="mt-2 text-blue-600 hover:underline"
+                                >
+                                    Update Profile
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                    
+                    {/* Job tabs */}
+                    <div className="mb-6">
+                        <div className="border-b border-gray-200">
+                            <nav className="-mb-px flex" aria-label="Tabs">
+                                <button
+                                    onClick={() => setActiveTab("telegram")}
+                                    className={`${
+                                        activeTab === "telegram"
+                                            ? "border-blue-500 text-blue-600"
+                                            : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                                    } w-1/2 py-4 px-1 text-center border-b-2 font-medium text-sm sm:text-base`}
+                                >
+                                    Telegram Jobs
+                                </button>
+                                <button
+                                    onClick={() => setActiveTab("times")}
+                                    className={`${
+                                        activeTab === "times"
+                                            ? "border-blue-500 text-blue-600"
+                                            : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                                    } w-1/2 py-4 px-1 text-center border-b-2 font-medium text-sm sm:text-base`}
+                                >
+                                    Times Jobs
+                                </button>
+                            </nav>
+                        </div>
+                    </div>
+                    
+                    {/* Job listings */}
+                    {loading ? (
+                        <div className="text-center py-10">Loading jobs...</div>
+                    ) : error ? (
+                        <div className="text-center py-10 text-red-600">{error}</div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {activeTab === "telegram" && telegramJobs.length > 0 ? (
+                               telegramJobs.map((job) => (
+                                <div key={job._id || job.id}>
+                                  {renderJobCard(job, "telegram")}
+                                </div>
+                              ))
+                            ) : activeTab === "times" && timesJobs.length > 0 ? (
+                                timesJobs.map((job) => (
+                                    <div key={job._id || job.id}>
+                                      {renderJobCard(job, "times")}
+                                    </div>
+                                  ))
+                            ) : (
+                                <div className="col-span-full text-center py-10">
+                                    No jobs found in this category
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </main>
             </div>
         </AuthGuard>
     );

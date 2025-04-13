@@ -1,33 +1,56 @@
+// src/components/Navbar.js
 "use client";
+
 import Link from "next/link";
-import { useDispatch, useSelector } from "react-redux";
-import { logout } from "@/redux/slices/authSlice";
+import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
+import { getUserFromLocalStorage } from "@/services/authService";
 
 export default function Navbar() {
-    const { isAuthenticated } = useSelector((state) => state.auth);
-    const dispatch = useDispatch();
-    const router = useRouter();
+  const { user } = useSelector((state) => state.auth);
+  const userData = user || getUserFromLocalStorage();
+  const router = useRouter();
 
-    const handleLogout = () => {
-        dispatch(logout());
-        router.push("/login");
-    };
-    return (
-        <div id="main">
-            <nav className="bg-gray-800 text-white p-4 flex justify-between">
-                <Link href="/" className="text-lg font-bold">MyApp</Link>
-                <div>
-                    {isAuthenticated ? (
-                        <>
-                            <Link href="/dashboard" className="mr-4">dashboard</Link>
-                            <button onClick={handleLogout} className="bg-red-500 px-3 py-1 rounded">Logout</button>
-                        </>
-                    ) : (
-                        <Link href="/login" className="bg-blue-500 px-3 py-1 rounded">Login</Link>
-                    )}
-                </div>
-            </nav>
+  return (
+    <nav className="bg-blue-600 text-white shadow-md">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16 items-center">
+          <div className="flex items-center">
+            <Link href="/" className="text-xl font-bold">
+              JobHunter
+            </Link>
+          </div>
+          
+          <div className="flex items-center space-x-4">
+            {userData ? (
+              <>
+                <span>Hello, {userData.name?.split(' ')[0] || 'User'}</span>
+                <button 
+                  onClick={() => router.push("/dashboard")}
+                  className="px-3 py-2 rounded hover:bg-blue-700"
+                >
+                  Dashboard
+                </button>
+                <button 
+                  onClick={() => router.push("/dashboard/profile")}
+                  className="px-3 py-2 rounded hover:bg-blue-700"
+                >
+                  Profile
+                </button>
+              </>
+            ) : (
+              <>
+                <Link href="/login" className="px-3 py-2 rounded hover:bg-blue-700">
+                  Login
+                </Link>
+                <Link href="/register" className="px-3 py-2 rounded hover:bg-blue-700">
+                  Register
+                </Link>
+              </>
+            )}
+          </div>
         </div>
-    )
+      </div>
+    </nav>
+  );
 }

@@ -1,3 +1,4 @@
+// models/User.js
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
@@ -15,14 +16,50 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-
-    // Additional fields
-    skills: { type: [String], default: [] },
-    experience: { type: String, default: "" },
-    education: { type: String, default: "" },
-    location: { type: String, default: "" },
-    aboutMe: { type: String, default: "" },
-    projects: { type: [String], default: [] },
+    // Enhanced profile fields
+    skills: { 
+        type: [String], 
+        default: [] 
+    },
+    experience: { 
+        type: String, 
+        default: "" 
+    },
+    role: {
+        type: String,
+        enum: ["Software Engineer", "Frontend Developer", "Backend Developer", "Full Stack Developer"],
+        default: "Software Engineer"
+    },
+    education: { 
+        type: String, 
+        default: "" 
+    },
+    location: { 
+        type: String, 
+        default: "" 
+    },
+    aboutMe: { 
+        type: String, 
+        default: "" 
+    },
+    projects: { 
+        type: [String], 
+        default: [] 
+    },
+    linkedin: {
+        type: String,
+        default: ""
+    },
+    github: {
+        type: String,
+        default: ""
+    },
+    portfolio: {
+        type: String,
+        default: ""
+    }
+}, {
+    timestamps: true
 });
 
 // Hash Password before saving

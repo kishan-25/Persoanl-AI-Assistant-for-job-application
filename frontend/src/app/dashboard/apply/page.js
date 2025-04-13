@@ -70,7 +70,7 @@ export default function ApplyPage() {
   };
 
   return (
-    <div className="p-6 text-black">
+    <div className="p-6 text-black bg-white">
       <h1 className="text-3xl font-bold mb-4">Job Application</h1>
 
       {error && <p className="text-red-500">{error}</p>}
