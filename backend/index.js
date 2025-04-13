@@ -87,50 +87,50 @@ connectDB();
 //   runScrapers();
 
 
-// //scrapper run
-// const runScrapers = async () => {
-//     console.log("🔄 Running scrapers...");
+//scrapper run
+const runScrapers = async () => {
+    console.log("🔄 Running scrapers...");
     
-//     const scriptsDir = path.join(__dirname, "scripts");
-//     const telegramScraperPath = path.join(scriptsDir, "telegram_scraper.py");
-//     const websiteScraperPath = path.join(scriptsDir, "website_scraper.py");
+    const scriptsDir = path.join(__dirname, "scripts");
+    const telegramScraperPath = path.join(scriptsDir, "telegram_scraper.py");
+    const websiteScraperPath = path.join(scriptsDir, "website_scraper.py");
 
-//     // Run Website Scraper first
-//     try {
-//         console.log("📊 Starting Website Scraper...");
-//         await new Promise((resolve, reject) => {
-//             exec(`python "${websiteScraperPath}"`, (error, stdout, stderr) => {
-//                 if (error) {
-//                     console.error(`❌ Website Scraper Error: ${error.message}`);
-//                     reject(error);
-//                     return;
-//                 }
-//                 if (stderr) console.error(`⚠ Website Scraper Stderr: ${stderr}`);
-//                 console.log(`✅ Website Scraper Output: ${stdout}`);
-//                 resolve();
-//             });
-//         });
+    // Run Website Scraper first
+    try {
+        console.log("📊 Starting Website Scraper...");
+        await new Promise((resolve, reject) => {
+            exec(`python "${websiteScraperPath}"`, (error, stdout, stderr) => {
+                if (error) {
+                    console.error(`❌ Website Scraper Error: ${error.message}`);
+                    reject(error);
+                    return;
+                }
+                if (stderr) console.error(`⚠ Website Scraper Stderr: ${stderr}`);
+                console.log(`✅ Website Scraper Output: ${stdout}`);
+                resolve();
+            });
+        });
         
-//         // Then run Telegram Scraper
-//         console.log("📱 Starting Telegram Scraper...");
-//         await new Promise((resolve, reject) => {
-//             exec(`python "${telegramScraperPath}"`, (error, stdout, stderr) => {
-//                 if (error) {
-//                     console.error(`❌ Telegram Scraper Error: ${error.message}`);
-//                     reject(error);
-//                     return;
-//                 }
-//                 if (stderr) console.error(`⚠ Telegram Scraper Stderr: ${stderr}`);
-//                 console.log(`✅ Telegram Scraper Output: ${stdout}`);
-//                 resolve();
-//             });
-//         });
+        // Then run Telegram Scraper
+        console.log("📱 Starting Telegram Scraper...");
+        await new Promise((resolve, reject) => {
+            exec(`python "${telegramScraperPath}"`, (error, stdout, stderr) => {
+                if (error) {
+                    console.error(`❌ Telegram Scraper Error: ${error.message}`);
+                    reject(error);
+                    return;
+                }
+                if (stderr) console.error(`⚠ Telegram Scraper Stderr: ${stderr}`);
+                console.log(`✅ Telegram Scraper Output: ${stdout}`);
+                resolve();
+            });
+        });
         
-//         console.log("✅ All scrapers completed successfully!");
-//     } catch (err) {
-//         console.error("❌ Error running scrapers:", err);
-//     }
-// };
+        console.log("✅ All scrapers completed successfully!");
+    } catch (err) {
+        console.error("❌ Error running scrapers:", err);
+    }
+};
 
 // const telegramScrapers = async () => {
 //     console.log("🔄 Running scrapers...");
