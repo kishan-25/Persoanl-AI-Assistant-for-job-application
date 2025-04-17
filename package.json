@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@google/generative-ai": "^0.24.0",
+    "cloudinary": "^2.6.0",
     "concurrently": "^9.1.2",
     "dotenv": "^16.4.7",
     "fs": "^0.0.1-security",
@@ -12,5 +13,12 @@
   },
   "scripts": {
     "dev": "concurrently -n \"frontend,backend\" -c \"bgBlue,bgGreen\" \"cd frontend && npm run dev\" \"cd backend && nodemon index.js\""
-  }
+  },
+  "name": "personal-ai-assistant",
+  "version": "1.0.0",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }
