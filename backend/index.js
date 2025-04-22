@@ -2,15 +2,24 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
+const multer = require('multer');
+const ImageKit = require('imagekit');
 const connectDB = require("./config/db");
-const authRoutes = require("./routes/authRoutes");
+
 const jobRoutes = require('./routes/jobRoutes');
-const resumeRoute = require("./routes/resumeRoute");
+const cvHandler = require('./cvHandler');
+const resumeRoutes = require('./routes/resumeRoute');
+const authRoutes = require('./routes/authRoutes');
 const { exec } = require("child_process");
 const generateCoverLetterRoute = require("./routes/generateCoverLetter");
 
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: ["http://localhost:3000", "http://127.0.0.1:3000"], // Add your frontend URLs
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true
+  }));
 app.use(express.json());
 
 app.get("/", (req,res) => {
@@ -20,6 +29,73 @@ app.get("/", (req,res) => {
     });
 });
 
+// Configure multer for file uploads
+const upload = multer({ 
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
+});
+
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const IMAGEKIT_PUBLIC_KEY = process.env.IMAGEKIT_PUBLIC_KEY;
+const IMAGEKIT_PRIVATE_KEY = process.env.IMAGEKIT_PRIVATE_KEY;
+const IMAGEKIT_URL_ENDPOINT = process.env.IMAGEKIT_URL_ENDPOINT;
+const IMAGEKIT_UPLOAD_FOLDER = process.env.IMAGEKIT_UPLOAD_FOLDER; 
+
+
+console.log("✅ IMAGEKIT_PUBLIC_KEY:", process.env.IMAGEKIT_PUBLIC_KEY);
+console.log("✅ IMAGEKIT_PRIVATE_KEY:", process.env.IMAGEKIT_PRIVATE_KEY);
+console.log("✅ IMAGEKIT_URL_ENDPOINT:", process.env.IMAGEKIT_URL_ENDPOINT);
+
+
+// Initialize ImageKit with explicit values
+const imagekit = new ImageKit({
+    publicKey: IMAGEKIT_PUBLIC_KEY,
+    privateKey: IMAGEKIT_PRIVATE_KEY,
+    urlEndpoint: IMAGEKIT_URL_ENDPOINT
+});
+
+// File upload endpoint
+app.post('/upload-cv', upload.single('file'), async (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    try {
+        // Upload file to ImageKit
+        const uploadResult = await imagekit.upload({
+            file: req.file.buffer,
+            fileName: `cv_${Date.now()}`,
+            folder: IMAGEKIT_UPLOAD_FOLDER
+        });
+
+        // Return the URL of the uploaded file
+        res.json({ 
+            success: true, 
+            fileUrl: uploadResult.url 
+        });
+    } catch (error) {
+        console.error('Error uploading file to ImageKit:', error);
+        res.status(500).json({ message: 'Failed to upload file' });
+    }
+});
+
+app.post('/process-cv', async(req, res) => {
+    const { fileUrl } = req.body;
+
+    if(!fileUrl) {
+        return res.status(400).json({ message: 'fileUrl is required' });
+    }
+
+    try {
+        const result = await cvHandler(fileUrl);
+        res.json(result);
+    } catch(err) {
+        console.error("Error processing CV:", err);
+        res.status(500).json({ message: err.message });
+    }
+});
+
+
 // ✅ Add these middlewares
 
 app.use(express.urlencoded({ extended: true }));
@@ -27,7 +103,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/v1/auth", authRoutes);
 app.use('/api/v1/jobs', jobRoutes);
 app.use("/api/v1/cover-letter", generateCoverLetterRoute);
-app.use("/api/v1/resume", resumeRoute);
+app.use('/api/v1/resume', resumeRoutes);
 
 
 const PORT = process.env.PORT || 5000;

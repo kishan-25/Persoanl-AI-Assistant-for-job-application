@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { logout } from "@/redux/slices/authSlice";
 import AuthGuard from "@/utils/authGuard";
 import { fetchTelegramJobs, fetchTimesJobs } from "@/services/jobService";
-import { calculateSkillMatch, getMatchColor } from "@/utils/jobMatching";
+import { calculateJobSkillMatch, getMatchColor, getMatchStrength } from "@/utils/jobMatching";
 import { getUserFromLocalStorage } from "@/services/authService";
 import Navbar from "@/components/Navbar";
 
@@ -29,6 +29,7 @@ export default function DashboardPage() {
         router.push("/login");
     };
 
+    // Using correct job skill matching logic
     useEffect(() => {
         const getJobs = async () => {
             setLoading(true);
@@ -38,13 +39,24 @@ export default function DashboardPage() {
 
                 if (telegramRes.success) {
                     // Calculate skill match for telegram jobs
-                    const jobsWithMatch = telegramRes.jobs.map(job => ({
-                        ...job,
-                        matchPercentage: calculateSkillMatch(
+                    const jobsWithMatch = telegramRes.jobs.map(job => {
+                        // Get key skills from job text if possible
+                        const jobSkills = job.keySkills || '';
+                        
+                        const matchResult = calculateJobSkillMatch(
                             userData?.skills || [], 
-                            job.text || job.title || ""
-                        )
-                    }));
+                            job.text || "",
+                            job.title || "",
+                            jobSkills
+                        );
+                        
+                        return {
+                            ...job,
+                            matchPercentage: matchResult.matchPercentage,
+                            matchStrength: getMatchStrength(matchResult.matchPercentage),
+                            skillsNotMatched: matchResult.skillsNotMatched
+                        };
+                    });
                     
                     // Sort jobs by match percentage (highest first)
                     setTelegramJobs(jobsWithMatch.sort((a, b) => b.matchPercentage - a.matchPercentage));
@@ -52,13 +64,21 @@ export default function DashboardPage() {
                 
                 if (timesRes.success) {
                     // Calculate skill match for times jobs
-                    const jobsWithMatch = timesRes.jobs.map(job => ({
-                        ...job,
-                        matchPercentage: calculateSkillMatch(
+                    const jobsWithMatch = timesRes.jobs.map(job => {
+                        const matchResult = calculateJobSkillMatch(
                             userData?.skills || [], 
-                            job.keySkills || job.title || ""
-                        )
-                    }));
+                            job.description || "",
+                            job.title || "",
+                            job.keySkills || ""
+                        );
+                        
+                        return {
+                            ...job,
+                            matchPercentage: matchResult.matchPercentage,
+                            matchStrength: getMatchStrength(matchResult.matchPercentage),
+                            skillsNotMatched: matchResult.skillsNotMatched
+                        };
+                    });
                     
                     // Sort jobs by match percentage (highest first)
                     setTimesJobs(jobsWithMatch.sort((a, b) => b.matchPercentage - a.matchPercentage));
@@ -82,14 +102,27 @@ export default function DashboardPage() {
             <div className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow">
                 <div className="flex justify-between">
                     <h3 className="font-semibold text-lg">{job.title || "No title"}</h3>
-                    <div className={`${getMatchColor(job.matchPercentage)} font-bold text-lg`}>
-                        {job.matchPercentage}% Match
+                    <div className="flex flex-col items-end">
+                        <div className={`${getMatchColor(job.matchPercentage)} font-bold text-lg`}>
+                            {job.matchPercentage}% Match
+                        </div>
+                        <div className="text-sm text-gray-500">
+                            {job.matchStrength} match
+                        </div>
                     </div>
                 </div>
                 
                 <p className="text-gray-700 mt-2">{job.company || "Unknown company"}</p>
                 
                 {job.location && <p className="text-gray-600 mt-1">📍 {job.location}</p>}
+                
+                {/* Display skills not matched - skills in job description but not in user skills */}
+                {job.skillsNotMatched && job.skillsNotMatched.length > 0 && (
+                    <div className="mt-2">
+                        <p className="text-sm font-medium text-orange-600">Skills not matched:</p>
+                        <p className="text-sm text-gray-600">{job.skillsNotMatched.join(", ")}</p>
+                    </div>
+                )}
                 
                 {source === "times" && job.keySkills && (
                     <div className="mt-2">

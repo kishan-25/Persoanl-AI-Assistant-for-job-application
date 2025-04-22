@@ -1,4 +1,3 @@
-// models/User.js
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
@@ -27,7 +26,14 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ["Software Engineer", "Frontend Developer", "Backend Developer", "Full Stack Developer"],
+        enum: [
+            "Software Engineer", 
+            "Frontend Developer", 
+            "Backend Developer", 
+            "Full Stack Developer",
+            "Researcher",
+            "Full Stack Developer | Researcher | Software Engineer"
+        ],
         default: "Software Engineer"
     },
     education: { 
