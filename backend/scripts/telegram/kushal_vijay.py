@@ -42,7 +42,7 @@ def parse_job_details(text):
         "company": None,
         "role": None,
         "batch": None,
-        "apply_link": None
+        "applyLink": None
     }
     
     if not text:
@@ -99,12 +99,12 @@ def parse_job_details(text):
         
         # Look for application link
         if "apply:" in line.lower():
-            job_details["apply_link"] = line.split(":", 1)[1].strip()
+            job_details["applyLink"] = line.split(":", 1)[1].strip()
         elif line.lower().startswith("http"):
             # Extract URL from the line
             url_match = re.search(r'https?://\S+', line)
             if url_match:
-                job_details["apply_link"] = url_match.group(0)
+                job_details["applyLink"] = url_match.group(0)
     
     # Extract company name from title if not found elsewhere
     if not job_details["company"] and job_details["title"]:
@@ -181,12 +181,12 @@ try:
                     # Parse job details from the message text
                     job_details = parse_job_details(message.text)
                     
-                    # Check if at least one of company, role, batch, or apply_link is available
+                    # Check if at least one of company, role, batch, or applyLink is available
                     has_job_info = (
                         job_details["company"] is not None or 
                         job_details["role"] is not None or 
                         job_details["batch"] is not None or 
-                        job_details["apply_link"] is not None
+                        job_details["applyLink"] is not None
                     )
                     
                     # Skip messages that don't have any job-related information
@@ -202,7 +202,7 @@ try:
                         "company": job_details["company"] or "",
                         "role": job_details["role"] or "",
                         "batch": job_details["batch"] or "",
-                        "apply_link": job_details["apply_link"] or "",
+                        "apply_link": job_details["applyLink"] or "",
                         "text": message.text if message.text else "",
                         "date": message.date,
                         "group": chat,
@@ -221,8 +221,8 @@ try:
                         print(f"Role: {job_details['role']}")
                     if job_details['batch']:
                         print(f"Batch: {job_details['batch']}")
-                    if job_details['apply_link']:
-                        print(f"Apply: {job_details['apply_link']}")
+                    if job_details['applyLink']:
+                        print(f"Apply: {job_details['applyLink']}")
                     print(f"Message Date: {message.date}")
                     print("=" * 60)
                     

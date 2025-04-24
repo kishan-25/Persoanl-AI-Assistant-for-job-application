@@ -5,6 +5,7 @@ import { loginSuccess } from "@/redux/slices/authSlice";
 import { registerUser } from "@/services/authService";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import toast, { Toaster } from "react-hot-toast";
 import ResumeUploadComponent from "@/components/ResumeUploadComponent";
 
 export default function RegisterPage() {
@@ -81,6 +82,11 @@ export default function RegisterPage() {
       newErrors.portfolio = "Please enter a valid URL";
     }
     
+    // Show toast notifications for errors
+    if (Object.keys(newErrors).length > 0) {
+      toast.error("Please fix the errors in the form");
+    }
+    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -100,6 +106,8 @@ export default function RegisterPage() {
       github: extractedData.github || prev.github,
       portfolio: extractedData.portfolio || prev.portfolio
     }));
+    
+    toast.success("Resume data imported successfully");
   };
 
   const handleRegister = async (e) => {
@@ -107,22 +115,74 @@ export default function RegisterPage() {
     if (!validateForm()) return;
     
     try {
-      const data = await registerUser(formData);
-      if (data.success) {
-        dispatch(loginSuccess(data));
-        router.push("/dashboard");
-      } else {
-        setErrors({ ...errors, server: data.message || "Registration failed" });
+      // Show loading toast
+      const loadingToast = toast.loading("Creating your account...");
+      
+      try {
+        const data = await registerUser(formData);
+        
+        // Dismiss loading toast
+        toast.dismiss(loadingToast);
+        
+        if (data.success) {
+          toast.success("Account created successfully!");
+          dispatch(loginSuccess(data));
+          router.push("/dashboard");
+        } else {
+          toast.error(data.message || "Registration failed");
+        }
+      } catch (error) {
+        // Dismiss loading toast
+        toast.dismiss(loadingToast);
+        
+        // Handle API error responses with non-200 status codes
+        console.log("Handling registration error:", error);
+        
+        // Check if this is an axios error with a response
+        if (error.response && error.response.data) {
+          const errorData = error.response.data;
+          
+          // Check for "User already exists" or similar messages
+          if (errorData.message && (
+              errorData.message.toLowerCase().includes("already exists") ||
+              errorData.message.toLowerCase().includes("already registered")
+            )) {
+            toast.error("This email is already registered. Please log in instead.");
+          } else {
+            toast.error(errorData.message || "Registration failed");
+          }
+        } else {
+          toast.error("An error occurred. Please try again.");
+        }
       }
-    } catch (error) {
-      setErrors({ ...errors, server: "An error occurred. Please try again." });
+    } catch (outerError) {
+      console.error("Unexpected error:", outerError);
+      toast.error("An unexpected error occurred. Please try again later.");
     }
   };
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg my-10 text-black">
+      {/* Add Toaster component to render the toasts */}
+      <Toaster position="top-right" toastOptions={{
+        duration: 4000,
+        style: {
+          background: '#363636',
+          color: '#fff',
+        },
+        success: {
+          style: {
+            background: 'green',
+          },
+        },
+        error: {
+          style: {
+            background: 'red',
+          },
+        },
+      }} />
+      
       <h1 className="text-2xl font-bold mb-6 text-center">Create Your Account</h1>
-      {errors.server && <p className="text-red-500 mb-4">{errors.server}</p>}
       
       <form onSubmit={handleRegister} className="space-y-4">
         {/* Resume Upload Component */}
@@ -245,11 +305,6 @@ export default function RegisterPage() {
             <option value="Frontend Developer">Frontend Developer</option>
             <option value="Backend Developer">Backend Developer</option>
             <option value="Full Stack Developer">Full Stack Developer</option>
-            <option value="DevOps Engineer">DevOps Engineer</option>
-            <option value="Data Scientist">Data Scientist</option>
-            <option value="Mobile Developer">Mobile Developer</option>
-            <option value="UX/UI Designer">UX/UI Designer</option>
-            <option value="QA Engineer">QA Engineer</option>
           </select>
         </div>
         

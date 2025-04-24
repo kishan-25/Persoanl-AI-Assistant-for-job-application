@@ -158,14 +158,14 @@ export default function DashboardPage() {
                     <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
                         <div className="flex justify-between items-center">
                             <h1 className="text-2xl font-bold text-gray-900">Job Dashboard</h1>
-                            <div className="flex gap-4 items-center">
+                            {/* <div className="flex gap-4 items-center">
                                 <button
                                     onClick={handleLogout}
                                     className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
                                 >
                                     Logout
                                 </button>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </header>

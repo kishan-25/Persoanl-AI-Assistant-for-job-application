@@ -84,7 +84,7 @@ for i, job in enumerate(jobs_container, 1):
             "experience": experience,
             "salary": salary,
             "keySkills": skills,
-            "applyLink": apply_link,
+            "apply_link": apply_link,
             "source": "TimesJobs",
             "createdAt": datetime.datetime.utcnow()
         }

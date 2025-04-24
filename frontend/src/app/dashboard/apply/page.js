@@ -104,8 +104,8 @@ export default function ApplyPage() {
 
   const handleApplyNow = () => {
     // Open the job application link in a new tab
-    if (job && job.applyLink) {
-      window.open(job.applyLink, '_blank');
+    if (job && job.apply_link) {
+      window.open(job.apply_link, '_blank');
       
       // Show application tracking options after opening the link
       setTimeout(() => {
@@ -129,7 +129,7 @@ export default function ApplyPage() {
           <p className="text-gray-700">{job.company}</p>
           <p className="text-gray-600">{job.location}</p>
           
-          {job.applyLink && !hasApplied ? (
+          {job.apply_link && !hasApplied ? (
             <button 
               onClick={handleApplyNow}
               className="mt-4 bg-blue-600 m-4 text-white px-4 py-2 rounded hover:bg-blue-700"

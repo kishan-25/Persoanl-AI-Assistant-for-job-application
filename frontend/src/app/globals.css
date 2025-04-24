@@ -3,6 +3,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --primary-gradient-start: #1e40af; /* Deep blue */
+  --primary-gradient-end: #581c87; /* Purple */
 }
 
 @theme inline {
@@ -12,15 +14,34 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
+/* Remove or comment out the media query to prevent dark mode */
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
+} */
 
-body {
-  background: var(--background);
+body, html {
+  background: var(--background) !important; /* Force light background */
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  min-height: 100%;
+}
+
+/* Add this to ensure all page wrappers use the light background */
+#__next, .app-container, main {
+  background: var(--background);
+  min-height: 100vh;
+}
+
+.gradient-header {
+  background: linear-gradient(135deg, var(--primary-gradient-start), var(--primary-gradient-end));
+  color: white;
+}
+
+.hero-section {
+  background: linear-gradient(135deg, var(--primary-gradient-start), var(--primary-gradient-end));
+  color: white;
+  padding: 3rem 1rem;
 }

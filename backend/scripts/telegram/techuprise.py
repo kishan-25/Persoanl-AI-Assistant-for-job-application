@@ -243,6 +243,6 @@ if job_posts:
         result = collection.insert_many(job_posts)
         print(f"\n✅ {len(result.inserted_ids)} Telegram job records saved to MongoDB (telegram collection)\n")
     except Exception as e:
-        print(f"\n❌ Error inserting data into MongoDB: {str(e)}\n")
+        print(f"\n❌ Error inserting data into MongoDB: {str(e)}\n") 
 else:
     print("\n⚠ No Telegram job posts found, nothing inserted into MongoDB.\n")

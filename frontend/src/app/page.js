@@ -74,121 +74,118 @@ export default function Home() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-gray-50 text-black">
-        {/* Hero Section */}
-        <motion.div 
-          initial="hidden"
-          animate={isLoaded ? "visible" : "hidden"}
-          variants={{
-            hidden: { opacity: 0 },
-            visible: { opacity: 1 }
-          }}
-          className="relative bg-blue-900 text-white overflow-hidden"
-        >
-          <div className="absolute inset-0">
-            <motion.div 
-              className="absolute inset-0 bg-gradient-to-br from-blue-900 to-purple-800"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.9 }}
-              transition={{ duration: 1.5 }}
-            />
-            {/* Background animation dots - Rendered client-side only to prevent hydration mismatch */}
-            <motion.div
-              className="absolute inset-0"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.2 }}
-              transition={{ duration: 2 }}
-            >
-              {dots.map((dot, index) => (
-                <motion.div
-                  key={index}
-                  className="absolute w-2 h-2 bg-white rounded-full"
-                  style={{
-                    left: dot.left,
-                    top: dot.top
-                  }}
-                  animate={{
-                    opacity: [0.2, 0.8, 0.2],
-                    scale: [1, 1.5, 1]
-                  }}
-                  transition={{
-                    duration: dot.duration,
-                    repeat: Infinity,
-                    delay: dot.delay
-                  }}
-                />
-              ))}
-            </motion.div>
-          </div>
+      <div className="min-h-screen text-black">
+  {/* Hero Section */}
+  <motion.div 
+    initial="hidden"
+    animate={isLoaded ? "visible" : "hidden"}
+    variants={{
+      hidden: { opacity: 0 },
+      visible: { opacity: 1 }
+    }}
+    className="relative overflow-hidden"
+  >
+    <div className="absolute inset-0">
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-blend-overlay"
+        style={{ backgroundImage: "url('/54fac986-84ff-4123-88d3-7ae50ec99718.png')" }}
+      />
 
-          <main className="max-w-7xl mx-auto py-20 px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="text-center">
-              <motion.h1 
-                className="text-4xl font-extrabold sm:text-5xl sm:tracking-tight lg:text-6xl mb-4"
-                variants={fadeIn}
-                initial="hidden"
-                animate="visible"
-              >
-                Find Your Dream Tech Job
-              </motion.h1>
-              <motion.div 
-                className="text-xl text-blue-200 max-w-2xl mx-auto h-16 "
-                variants={fadeIn}
-                initial="hidden"
-                animate="visible"
-                transition={{ delay: 0.3 }}
-              >
-                <Typewriter
-                  options={{
-                    strings: [
-                      "Discover software engineering opportunities that match your skills",
-                      "Find top tech companies hiring now",
-                      "Find remote, hybrid, or in-person positions"
-                    ],
-                    autoStart: true,
-                    loop: true,
-                    delay: 40,
-                    deleteSpeed: 20
-                  }}
-                />
-              </motion.div>
-              <motion.div 
-                className="mt-10 flex justify-center space-x-6"
-                variants={staggerContainer}
-                initial="hidden"
-                animate="visible"
-              >
-  
-              </motion.div>
-              
-              <motion.div 
-                className="mt-12 flex justify-center space-x-12"
-                variants={fadeIn}
-                initial="hidden"
-                animate="visible"
-                transition={{ delay: 0.6 }}
-              >
-                <div className="text-center">
-                  <div className="text-3xl font-bold">
-                    <CountUp end={500} suffix="+" duration={2.5} />
-                  </div>
-                  <div className="text-blue-200">Active Jobs</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold">
-                    <CountUp end={200} suffix="+" duration={2.5} />
-                  </div>
-                  <div className="text-blue-200">Companies</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold">
-                    <CountUp end={150} suffix="+" duration={2.5} />
-                  </div>
-                  <div className="text-blue-200">Developers</div>
-                </div>
-              </motion.div>
-            </div>
-          </main>
+      {/* Gradient Overlay */}
+      <motion.div 
+        className="absolute inset-0 bg-gradient-to-br from-blue-900 to-purple-800 opacity-90"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.9 }}
+        transition={{ duration: 1.5 }}
+      />
+
+      {/* Floating Dots Animation */}
+      <motion.div
+        className="absolute inset-0"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.2 }}
+        transition={{ duration: 2 }}
+      >
+        {dots.map((dot, index) => (
+          <motion.div
+            key={index}
+            className="absolute w-2 h-2 rounded-full bg-white"
+            style={{ left: dot.left, top: dot.top }}
+            animate={{
+              opacity: [0.2, 0.8, 0.2],
+              scale: [1, 1.5, 1]
+            }}
+            transition={{
+              duration: dot.duration,
+              repeat: Infinity,
+              delay: dot.delay
+            }}
+          />
+        ))}
+      </motion.div>
+    </div>
+
+    <main className="flex flex-col items-center justify-center min-h-[75vh] text-black px-4 sm:px-6 lg:px-8">
+      <motion.div
+        className="text-center"
+        variants={fadeIn}
+        initial="hidden"
+        animate="visible"
+        transition={{ delay: 0.2 }}
+      >
+        <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900">
+          Empowering Developers with Opportunities
+        </h1>
+        <p className="mt-2 text-lg text-gray-600 max-w-2xl mx-auto">
+          Discover tech jobs, internships, and exclusive opportunities tailored for developers, by developers.
+        </p>
+      </motion.div>
+
+      <motion.div
+        className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center"
+        variants={fadeIn}
+        initial="hidden"
+        animate="visible"
+        transition={{ delay: 0.5 }}
+      >
+        <div>
+          <h2 className="text-3xl font-bold text-purple-700">1000+</h2>
+          <p className="text-gray-600">Opportunities Listed</p>
+        </div>
+        <div>
+          <h2 className="text-3xl font-bold text-purple-700">500+</h2>
+          <p className="text-gray-600">Developers Hired</p>
+        </div>
+        <div>
+          <h2 className="text-3xl font-bold text-purple-700">120+</h2>
+          <p className="text-gray-600">Top Tech Companies</p>
+        </div>
+      </motion.div>
+
+      <motion.div 
+        className="mt-4 text-lg text-gray-700 max-w-2xl mx-auto text-center"
+        variants={fadeIn}
+        initial="hidden"
+        animate="visible"
+        transition={{ delay: 0.8 }}
+      >
+        Start exploring thousands of curated job listings, connect with hiring managers, and take the next big step in your tech career.
+      </motion.div>
+
+      <motion.div 
+        className="mt-4 flex justify-center"
+        variants={fadeIn}
+        initial="hidden"
+        animate="visible"
+        transition={{ delay: 1 }}
+      >
+        <button className="bg-purple-700 hover:bg-purple-800 text-white font-semibold py-2 px-6 rounded-lg transition duration-300">
+          Browse Jobs
+        </button>
+      </motion.div>
+    </main>
+
         </motion.div>
 
         {/* How It Works */}

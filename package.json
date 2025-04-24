@@ -1,17 +1,7 @@
 {
   "dependencies": {
-    "@google/generative-ai": "^0.24.0",
-    "cloudinary": "^2.6.0",
-    "concurrently": "^9.1.2",
-    "dotenv": "^16.4.7",
-    "framer-motion": "^12.7.4",
-    "fs": "^0.0.1-security",
-    "lucide-react": "^0.501.0",
-    "openai": "^4.91.1",
-    "playwright": "^1.51.1",
-    "puppeteer": "^24.5.0",
-    "puppeteer-extra": "^3.3.6",
-    "puppeteer-extra-plugin-stealth": "^2.11.2"
+    "concurrently": "^9.1.2"
+   
   },
   "scripts": {
     "dev": "concurrently -n \"frontend,backend\" -c \"bgBlue,bgGreen\" \"cd frontend && npm run dev\" \"cd backend && nodemon index.js\""
