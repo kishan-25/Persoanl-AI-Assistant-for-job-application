@@ -114,7 +114,7 @@ export default function DashboardPage() {
                 
                 <p className="text-gray-700 mt-2">{job.company || "Unknown company"}</p>
                 
-                {job.location && <p className="text-gray-600 mt-1">📍 {job.location}</p>}
+                {job.location && <p className="text-gray-600 mt-1"> {job.location}</p>}
                 
                 {/* Display skills not matched - skills in job description but not in user skills */}
                 {job.skillsNotMatched && job.skillsNotMatched.length > 0 && (

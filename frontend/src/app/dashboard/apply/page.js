@@ -83,12 +83,17 @@ export default function ApplyPage() {
           <h2 className="text-2xl font-semibold">{job.title}</h2>
           <p className="text-gray-700">{job.company}</p>
           <p className="text-gray-600">{job.location}</p>
-          <Link href={job.applyLink} 
-                target="_blank"
-                className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
-            <button>Apply</button>
-          </Link>
+          {job && job.applyLink && (
+              <Link href={job.applyLink}
+                        target="_blank"
+                        
+                >
+               <button 
+                    className="mt-4 bg-blue-600 m-4 text-white px-4 py-2 rounded hover:bg-blue-700"
+                    >Apply Now</button>
+              </Link>
+            )}
+                  
           {job.description && <p className="mt-2">{job.description}</p>}
 
           <button
