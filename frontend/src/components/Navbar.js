@@ -1,15 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
-import { getUserFromLocalStorage } from "@/services/authService";
+import { getUserFromLocalStorage, removeUserFromLocalStorage } from "@/services/authService";
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogOut } from "lucide-react";
+import { logout } from "@/redux/slices/authSlice";
 
 export default function Navbar() {
-  const { user } = useSelector((state) => state.auth);
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const [userData, setUserData] = useState(null);
   const [isClient, setIsClient] = useState(false);
@@ -29,6 +31,17 @@ export default function Navbar() {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const handleLogout = () => {
+    // Remove user from localStorage
+    removeUserFromLocalStorage();
+    // Update Redux state
+    dispatch(logout());
+    // Redirect to home page
+    router.push("/");
+    // Close mobile menu if open
+    if (isMenuOpen) setIsMenuOpen(false);
+  };
+
   if (!isClient) return null; // Prevent SSR mismatch
 
   return (
@@ -43,28 +56,25 @@ export default function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-4">
-            {userData ? (
+            <Link href="/about" className="px-3 py-2 rounded hover:bg-blue-700">
+              About us
+            </Link>
+            
+            {userData || isAuthenticated ? (
               <>
-                <span>Hello, {userData.name?.split(" ")[0] || "User"}</span>
-                <button
-                  onClick={() => router.push("/dashboard")}
-                  className="px-3 py-2 rounded hover:bg-blue-700"
-                >
+                <span>Hello, {userData?.name?.split(" ")[0] || "User"}</span>
+                <Link href="/dashboard" className="px-3 py-2 rounded hover:bg-blue-700">
                   Dashboard
-                </button>
-
-                <button
-                  onClick={() => router.push("/about")}
-                  className="px-3 py-2 rounded hover:bg-blue-700"
-                >
-                  About us
-                </button>
-                
-                <button
-                  onClick={() => router.push("/profile")}
-                  className="px-3 py-2 rounded hover:bg-blue-700"
-                >
+                </Link>
+                <Link href="/dashboard/profile" className="px-3 py-2 rounded hover:bg-blue-700">
                   Profile
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center px-3 py-2 rounded bg-red-600 hover:bg-red-700"
+                >
+                  <LogOut size={18} className="mr-1" />
+                  Logout
                 </button>
               </>
             ) : (
@@ -72,8 +82,11 @@ export default function Navbar() {
                 <Link href="/login" className="px-3 py-2 rounded hover:bg-blue-700">
                   Login
                 </Link>
-                <Link href="/register" className="px-3 py-2 rounded hover:bg-blue-700">
-                  Register
+                <Link 
+                  href="/register" 
+                  className="px-3 py-2 rounded bg-green-600 hover:bg-green-700"
+                >
+                  Sign Up
                 </Link>
               </>
             )}
@@ -95,37 +108,39 @@ export default function Navbar() {
       {isMenuOpen && (
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-blue-700">
-            {userData ? (
+            <Link 
+              href="/about" 
+              className="block px-3 py-2 rounded hover:bg-blue-700"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              About us
+            </Link>
+            
+            {userData || isAuthenticated ? (
               <>
                 <div className="px-3 py-2 font-medium">
-                  Hello, {userData.name?.split(" ")[0] || "User"}
+                  Hello, {userData?.name?.split(" ")[0] || "User"}
                 </div>
-                <button
-                  onClick={() => {
-                    router.push("/dashboard");
-                    setIsMenuOpen(false);
-                  }}
+                <Link
+                  href="/dashboard"
                   className="block px-3 py-2 rounded w-full text-left hover:bg-blue-700"
+                  onClick={() => setIsMenuOpen(false)}
                 >
                   Dashboard
-                </button>
-                <button
-                  onClick={() => {
-                    router.push("/about");
-                    setIsMenuOpen(false);
-                  }}
+                </Link>
+                <Link
+                  href="/dashboard/profile"
                   className="block px-3 py-2 rounded w-full text-left hover:bg-blue-700"
-                >
-                  About us
-                </button>
-                <button
-                  onClick={() => {
-                    router.push("/profile");
-                    setIsMenuOpen(false);
-                  }}
-                  className="block px-3 py-2 rounded w-full text-left hover:bg-blue-700"
+                  onClick={() => setIsMenuOpen(false)}
                 >
                   Profile
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center w-full px-3 py-2 rounded text-left bg-red-600 hover:bg-red-700"
+                >
+                  <LogOut size={18} className="mr-1" />
+                  Logout
                 </button>
               </>
             ) : (
@@ -139,10 +154,10 @@ export default function Navbar() {
                 </Link>
                 <Link 
                   href="/register" 
-                  className="block px-3 py-2 rounded hover:bg-blue-700"
+                  className="block px-3 py-2 rounded bg-green-600 hover:bg-green-700"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Register
+                  Sign Up
                 </Link>
               </>
             )}

@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useSelector } from "react-redux";
 import { generateCoverLetter } from "@/services/coverLetterService";
 import { fetchTelegramJobs, fetchTimesJobs } from "@/services/jobService";
+import { trackJobApplication } from "@/services/applicationService";
 import Link from "next/link";
 
 // Import the getToken function
@@ -21,6 +22,8 @@ export default function ApplyPage() {
   const [loading, setLoading] = useState(false);
   const [coverLetter, setCoverLetter] = useState("");
   const [error, setError] = useState("");
+  const [hasApplied, setHasApplied] = useState(false);
+  const [applicationTracking, setApplicationTracking] = useState(false);
 
   useEffect(() => {
     const getJobById = async () => {
@@ -70,6 +73,48 @@ export default function ApplyPage() {
     }
   };
 
+  const handleApplicationTracking = async (applied) => {
+    setApplicationTracking(true);
+    
+    try {
+      const token = getToken();
+      if (!token) {
+        setError("You must be logged in to track your application");
+        return;
+      }
+
+      await trackJobApplication({
+        jobId: job._id,
+        title: job.title,
+        company: job.company,
+        location: job.location,
+        applied: applied,
+        source: source,
+        applicationDate: new Date().toISOString()
+      });
+
+      setHasApplied(applied);
+    } catch (err) {
+      console.error("Application tracking error:", err);
+      setError("Failed to track your application status");
+    } finally {
+      setApplicationTracking(false);
+    }
+  };
+
+  const handleApplyNow = () => {
+    // Open the job application link in a new tab
+    if (job && job.applyLink) {
+      window.open(job.applyLink, '_blank');
+      
+      // Show application tracking options after opening the link
+      setTimeout(() => {
+        setHasApplied(true);
+        handleApplicationTracking(true);
+      }, 1000);
+    }
+  };
+
   return (
     <div className="p-6 text-black bg-white">
       <h1 className="text-3xl font-bold mb-4">Job Application</h1>
@@ -83,16 +128,20 @@ export default function ApplyPage() {
           <h2 className="text-2xl font-semibold">{job.title}</h2>
           <p className="text-gray-700">{job.company}</p>
           <p className="text-gray-600">{job.location}</p>
-          {job && job.applyLink && (
-              <Link href={job.applyLink}
-                        target="_blank"
-                        
-                >
-               <button 
-                    className="mt-4 bg-blue-600 m-4 text-white px-4 py-2 rounded hover:bg-blue-700"
-                    >Apply Now</button>
-              </Link>
-            )}
+          
+          {job.applyLink && !hasApplied ? (
+            <button 
+              onClick={handleApplyNow}
+              className="mt-4 bg-blue-600 m-4 text-white px-4 py-2 rounded hover:bg-blue-700"
+              disabled={applicationTracking}
+            >
+              Apply Now
+            </button>
+          ) : hasApplied ? (
+            <div className="mt-4 p-2 bg-green-100 text-green-700 rounded">
+              You have applied to this job
+            </div>
+          ) : null}
                   
           {job.description && <p className="mt-2">{job.description}</p>}
 

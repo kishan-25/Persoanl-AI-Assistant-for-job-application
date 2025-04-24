@@ -65,3 +65,11 @@ export const logoutUser = () => {
   removeToken();
   localStorage.removeItem('userData');
 };
+
+// Add this function to match the import in Navbar.js
+export const removeUserFromLocalStorage = () => {
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem('userData');
+    removeToken();
+  }
+};

@@ -6,6 +6,7 @@ const multer = require('multer');
 const ImageKit = require('imagekit');
 const connectDB = require("./config/db");
 
+const applicationRoutes = require('./routes/applicationRoutes');
 const jobRoutes = require('./routes/jobRoutes');
 const cvHandler = require('./cvHandler');
 const resumeRoutes = require('./routes/resumeRoute');
@@ -99,7 +100,7 @@ app.use("/api/v1/auth", authRoutes);
 app.use('/api/v1/jobs', jobRoutes);
 app.use("/api/v1/cover-letter", generateCoverLetterRoute);
 app.use('/api/v1/resume', resumeRoutes);
-
+app.use('/api/v1/applications', applicationRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, ()=> console.log(`Server is runnig on PORT : ${PORT}`));

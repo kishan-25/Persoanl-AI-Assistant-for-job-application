@@ -132,7 +132,7 @@ export default function Home() {
                 Find Your Dream Tech Job
               </motion.h1>
               <motion.div 
-                className="text-xl text-blue-200 max-w-2xl mx-auto h-12"
+                className="text-xl text-blue-200 max-w-2xl mx-auto h-16 "
                 variants={fadeIn}
                 initial="hidden"
                 animate="visible"
@@ -142,7 +142,7 @@ export default function Home() {
                   options={{
                     strings: [
                       "Discover software engineering opportunities that match your skills",
-                      "Connect with top tech companies hiring now",
+                      "Find top tech companies hiring now",
                       "Find remote, hybrid, or in-person positions"
                     ],
                     autoStart: true,
@@ -158,31 +158,7 @@ export default function Home() {
                 initial="hidden"
                 animate="visible"
               >
-                <motion.button
-                  onClick={() => router.push("/register")}
-                  className="px-8 py-3 border border-transparent text-base font-medium rounded-md text-blue-900 bg-white hover:bg-gray-100 shadow-lg flex items-center group"
-                  variants={cardVariant}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Sign Up Now
-                  <motion.div
-                    className="ml-2"
-                    animate={{ x: [0, 5, 0] }}
-                    transition={{ repeat: Infinity, duration: 1.5 }}
-                  >
-                    <FiArrowRight />
-                  </motion.div>
-                </motion.button>
-                <motion.button
-                  onClick={() => router.push("/login")}
-                  className="px-8 py-3 border border-white text-base font-medium rounded-md text-white bg-transparent hover:bg-white/10 flex items-center"
-                  variants={cardVariant}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Log In
-                </motion.button>
+  
               </motion.div>
               
               <motion.div 
@@ -194,19 +170,19 @@ export default function Home() {
               >
                 <div className="text-center">
                   <div className="text-3xl font-bold">
-                    <CountUp end={5000} suffix="+" duration={2.5} />
+                    <CountUp end={500} suffix="+" duration={2.5} />
                   </div>
                   <div className="text-blue-200">Active Jobs</div>
                 </div>
                 <div className="text-center">
                   <div className="text-3xl font-bold">
-                    <CountUp end={2400} suffix="+" duration={2.5} />
+                    <CountUp end={200} suffix="+" duration={2.5} />
                   </div>
                   <div className="text-blue-200">Companies</div>
                 </div>
                 <div className="text-center">
                   <div className="text-3xl font-bold">
-                    <CountUp end={15000} suffix="+" duration={2.5} />
+                    <CountUp end={150} suffix="+" duration={2.5} />
                   </div>
                   <div className="text-blue-200">Developers</div>
                 </div>
@@ -553,18 +529,7 @@ export default function Home() {
                   transition={{ delay: 0.2 }}
                   viewport={{ once: true }}
                 >
-                  <li>
-                    <Link href="#" className="text-gray-300 hover:text-white transition-colors">Salary Guide</Link>
-                  </li>
-                  <li>
-                    <Link href="#" className="text-gray-300 hover:text-white transition-colors">Interview Tips</Link>
-                  </li>
-                  <li>
-                    <Link href="#" className="text-gray-300 hover:text-white transition-colors">Remote Work</Link>
-                  </li>
-                  <li>
-                    <Link href="#" className="text-gray-300 hover:text-white transition-colors">Career Growth</Link>
-                  </li>
+                  
                 </motion.ul>
               </div>
 

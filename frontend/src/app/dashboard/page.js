@@ -160,12 +160,6 @@ export default function DashboardPage() {
                             <h1 className="text-2xl font-bold text-gray-900">Job Dashboard</h1>
                             <div className="flex gap-4 items-center">
                                 <button
-                                    onClick={() => router.push("/dashboard/profile")}
-                                    className="bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200"
-                                >
-                                    My Profile
-                                </button>
-                                <button
                                     onClick={handleLogout}
                                     className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
                                 >
