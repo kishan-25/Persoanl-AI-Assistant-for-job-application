@@ -16,6 +16,7 @@ export default function Home() {
   const [dots, setDots] = useState([]);
   
   useEffect(() => {
+    // Set isLoaded to true immediately to ensure the background is visible right away
     setIsLoaded(true);
     
     // Generate dots only on the client side to avoid hydration mismatch
@@ -74,119 +75,42 @@ export default function Home() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen text-black">
-  {/* Hero Section */}
-  <motion.div 
-    initial="hidden"
-    animate={isLoaded ? "visible" : "hidden"}
-    variants={{
-      hidden: { opacity: 0 },
-      visible: { opacity: 1 }
-    }}
-    className="relative overflow-hidden"
-  >
-    <div className="absolute inset-0">
-      {/* Background Image */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-blend-overlay"
-        style={{ backgroundImage: "url('/54fac986-84ff-4123-88d3-7ae50ec99718.png')" }}
-      />
+      <main className="bg-blue-400 text-black flex flex-col items-center justify-center min-h-[75vh] px-4 sm:px-6 lg:px-8">
+  <div className="text-center">
+    <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-black">
+      Empowering Developers with Opportunities
+    </h1>
+    <p className="mt-2 text-lg text-black max-w-2xl mx-auto">
+      Discover tech jobs, internships, and exclusive opportunities tailored for developers, by developers.
+    </p>
+  </div>
 
-      {/* Gradient Overlay */}
-      <motion.div 
-        className="absolute inset-0 bg-gradient-to-br from-blue-900 to-purple-800 opacity-90"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.9 }}
-        transition={{ duration: 1.5 }}
-      />
-
-      {/* Floating Dots Animation */}
-      <motion.div
-        className="absolute inset-0"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.2 }}
-        transition={{ duration: 2 }}
-      >
-        {dots.map((dot, index) => (
-          <motion.div
-            key={index}
-            className="absolute w-2 h-2 rounded-full bg-white"
-            style={{ left: dot.left, top: dot.top }}
-            animate={{
-              opacity: [0.2, 0.8, 0.2],
-              scale: [1, 1.5, 1]
-            }}
-            transition={{
-              duration: dot.duration,
-              repeat: Infinity,
-              delay: dot.delay
-            }}
-          />
-        ))}
-      </motion.div>
+  <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+    <div>
+      <h2 className="text-3xl font-bold text-purple-300">1000+</h2>
+      <p className="text-black">Opportunities Listed</p>
     </div>
+    <div>
+      <h2 className="text-3xl font-bold text-purple-300">500+</h2>
+      <p className="text-black">Developers Hired</p>
+    </div>
+    <div>
+      <h2 className="text-3xl font-bold text-purple-300">120+</h2>
+      <p className="text-black">Top Tech Companies</p>
+    </div>
+  </div>
 
-    <main className="flex flex-col items-center justify-center min-h-[75vh] text-black px-4 sm:px-6 lg:px-8">
-      <motion.div
-        className="text-center"
-        variants={fadeIn}
-        initial="hidden"
-        animate="visible"
-        transition={{ delay: 0.2 }}
-      >
-        <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900">
-          Empowering Developers with Opportunities
-        </h1>
-        <p className="mt-2 text-lg text-gray-600 max-w-2xl mx-auto">
-          Discover tech jobs, internships, and exclusive opportunities tailored for developers, by developers.
-        </p>
-      </motion.div>
+  <div className="mt-4 text-lg text-black max-w-2xl mx-auto text-center">
+    Start exploring thousands of curated job listings, connect with hiring managers, and take the next big step in your tech career.
+  </div>
 
-      <motion.div
-        className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center"
-        variants={fadeIn}
-        initial="hidden"
-        animate="visible"
-        transition={{ delay: 0.5 }}
-      >
-        <div>
-          <h2 className="text-3xl font-bold text-purple-700">1000+</h2>
-          <p className="text-gray-600">Opportunities Listed</p>
-        </div>
-        <div>
-          <h2 className="text-3xl font-bold text-purple-700">500+</h2>
-          <p className="text-gray-600">Developers Hired</p>
-        </div>
-        <div>
-          <h2 className="text-3xl font-bold text-purple-700">120+</h2>
-          <p className="text-gray-600">Top Tech Companies</p>
-        </div>
-      </motion.div>
-
-      <motion.div 
-        className="mt-4 text-lg text-gray-700 max-w-2xl mx-auto text-center"
-        variants={fadeIn}
-        initial="hidden"
-        animate="visible"
-        transition={{ delay: 0.8 }}
-      >
-        Start exploring thousands of curated job listings, connect with hiring managers, and take the next big step in your tech career.
-      </motion.div>
-
-      <motion.div 
-        className="mt-4 flex justify-center"
-        variants={fadeIn}
-        initial="hidden"
-        animate="visible"
-        transition={{ delay: 1 }}
-      >
-        <button className="bg-purple-700 hover:bg-purple-800 text-white font-semibold py-2 px-6 rounded-lg transition duration-300">
-          Browse Jobs
-        </button>
-      </motion.div>
-    </main>
-
-        </motion.div>
+  <div className="mt-4 flex justify-center">
+    <button className="bg-purple-700 hover:bg-purple-800 text-white font-semibold py-2 px-6 rounded-lg transition duration-300">
+      Browse Jobs
+    </button>
+  </div>
+</main>
+   
 
         {/* How It Works */}
         <div className="max-w-7xl mx-auto py-24 px-4 sm:px-6 lg:px-8">
@@ -254,7 +178,7 @@ export default function Home() {
           </motion.div>
         </div>
 
-        {/* Why Choose JobHunter */}
+        {/* Why Choose TalentAlign */}
         <div className="bg-gray-100 py-24 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <motion.div 
@@ -264,7 +188,7 @@ export default function Home() {
               animate={whyChooseInView ? "visible" : "hidden"}
               className="text-center"
             >
-              <h2 className="text-3xl font-bold mb-2">Why Choose JobHunter</h2>
+              <h2 className="text-3xl font-bold mb-2">Why Choose TalentAlign</h2>
               <div className="w-24 h-1 bg-blue-600 mx-auto mb-8"></div>
               <p className="text-gray-600 mb-12 max-w-2xl mx-auto">
                 We&apos;ve built powerful tools to help developers find their perfect career match
@@ -352,43 +276,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Featured Companies */}
-        <div className="max-w-7xl mx-auto py-24 px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            ref={companiesRef}
-            variants={fadeIn}
-            initial="hidden"
-            animate={companiesInView ? "visible" : "hidden"}
-            className="text-center mb-12"
-          >
-            <h2 className="text-3xl font-bold mb-2">Featured Companies</h2>
-            <div className="w-24 h-1 bg-blue-600 mx-auto mb-8"></div>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Top tech companies that are actively hiring software engineers through our platform
-            </p>
-          </motion.div>
-
-          <motion.div 
-            variants={staggerContainer}
-            initial="hidden"
-            animate={companiesInView ? "visible" : "hidden"}
-            className="grid grid-cols-2 md:grid-cols-4 gap-8"
-          >
-            {[1, 2, 3, 4].map((logo, index) => (
-              <motion.div
-                key={index}
-                variants={cardVariant}
-                className="h-24 bg-white shadow-md rounded-lg flex items-center justify-center hover:shadow-xl transition-shadow duration-300"
-                whileHover={{ 
-                  scale: 1.05,
-                  boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
-                }}
-              >
-                <div className="text-gray-700 font-semibold">Logo {logo}</div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
+       
 
         {/* CTA Section */}
         <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-24 px-4 sm:px-6 lg:px-8">
@@ -409,7 +297,7 @@ export default function Home() {
               transition={{ delay: 0.2, duration: 0.6 }}
               viewport={{ once: true }}
             >
-              Join thousands of software engineers who have found their dream jobs through JobHunter.
+              Join thousands of software engineers who have found their dream jobs through TalentAlign.
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -466,7 +354,7 @@ export default function Home() {
                   whileInView={{ opacity: 1 }}
                   viewport={{ once: true }}
                 >
-                  JobHunter
+                  TalentAlign
                 </motion.h3>
                 <motion.p 
                   className="text-gray-300"
@@ -496,39 +384,13 @@ export default function Home() {
                   viewport={{ once: true }}
                 >
                   <li>
-                    <Link href="#" className="text-gray-300 hover:text-white transition-colors">About Us</Link>
+                    <Link href="/about" className="text-gray-300 hover:text-white transition-colors">About Us</Link>
                   </li>
-                  <li>
-                    <Link href="#" className="text-gray-300 hover:text-white transition-colors">For Employers</Link>
-                  </li>
-                  <li>
-                    <Link href="#" className="text-gray-300 hover:text-white transition-colors">Blog</Link>
-                  </li>
-                  <li>
-                    <Link href="#" className="text-gray-300 hover:text-white transition-colors">FAQ</Link>
-                  </li>
-                </motion.ul>
-              </div>
-
-              <div>
-                <motion.h3 
-                  className="text-xl font-semibold mb-4"
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true }}
-                >
-                  Resources
-                </motion.h3>
-                <motion.ul 
-                  className="space-y-2"
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                  viewport={{ once: true }}
-                >
                   
                 </motion.ul>
               </div>
+
+              
 
               <div>
                 <motion.h3 
@@ -566,11 +428,10 @@ export default function Home() {
               transition={{ delay: 0.4 }}
               viewport={{ once: true }}
             >
-              <p>&copy; {new Date().getFullYear()} JobHunter. All rights reserved.</p>
+              <p>&copy; {new Date().getFullYear()} TalentAlign. All rights reserved.</p>
             </motion.div>
           </div>
         </footer>
-      </div>
     </>
   );
 }

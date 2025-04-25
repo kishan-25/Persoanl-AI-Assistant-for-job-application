@@ -50,7 +50,7 @@ export default function Navbar() {
         <div className="flex justify-between h-16 items-center">
           <div className="flex items-center">
             <Link href="/" className="text-xl font-bold">
-              JobHunter
+              TalentAlign
             </Link>
           </div>
 

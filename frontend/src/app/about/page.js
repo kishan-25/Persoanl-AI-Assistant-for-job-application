@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Head from 'next/head';
 import { motion } from 'framer-motion';
 import { Github, Linkedin, Twitter } from 'lucide-react';
+import Navbar from '@/components/Navbar';
 
 export default function About() {
   const [activeTab, setActiveTab] = useState('mission');
@@ -26,42 +27,17 @@ export default function About() {
     }
   };
 
-  const teamMembers = [
-    { 
-      name: 'Alex Chen', 
-      role: 'CEO & Founder', 
-      image: '/api/placeholder/100/100',
-      bio: 'Former AI researcher with a passion for transforming the job market.'
-    },
-    { 
-      name: 'Sarah Johnson', 
-      role: 'CTO', 
-      image: '/api/placeholder/100/100',
-      bio: 'Machine learning expert specialized in natural language processing.'
-    },
-    { 
-      name: 'Michael Lee', 
-      role: 'Head of Product', 
-      image: '/api/placeholder/100/100',
-      bio: 'Product strategist focused on creating intuitive user experiences.'
-    },
-    { 
-      name: 'Priya Patel', 
-      role: 'Data Science Lead', 
-      image: '/api/placeholder/100/100',
-      bio: 'PhD in Computer Science with expertise in recommendation systems.'
-    }
-  ];
-
+ 
   const stats = [
-    { number: '50K+', label: 'Job Matches' },
-    { number: '1M+', label: 'Users' },
-    { number: '10K+', label: 'Companies' },
+    { number: '5K+', label: 'Job Matches' },
+    { number: '1+', label: 'Users' },
+    { number: '2K+', label: 'Companies' },
     { number: '95%', label: 'Satisfaction' }
   ];
 
   return (
     <>
+    <Navbar/>
       <Head>
         <title>About Us | AI Job Portal</title>
         <meta name="description" content="Learn about our AI-powered job matching platform" />
@@ -254,47 +230,7 @@ export default function About() {
           </div>
         </section>
 
-        {/* Team Section */}
-        <motion.section 
-          className="py-16 px-6 md:px-10 lg:px-20 bg-white"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={staggerChildren}
-        >
-          <div className="max-w-7xl mx-auto">
-            <motion.div variants={fadeIn} className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-800 mb-4">Meet Our Team</h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                We&aposre a passionate group of technologists, data scientists, and industry experts committed to revolutionizing job search.
-              </p>
-            </motion.div>
-
-            <motion.div variants={fadeIn} className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {teamMembers.map((member, index) => (
-                <motion.div 
-                  key={index}
-                  className="bg-gray-50 rounded-lg overflow-hidden shadow-md"
-                  whileHover={{ y: -10 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  <div className="p-6">
-                    <div className="w-24 h-24 rounded-full overflow-hidden mx-auto mb-4">
-                      <img 
-                        src={member.image} 
-                        alt={member.name} 
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <h3 className="text-xl font-semibold text-gray-800 text-center">{member.name}</h3>
-                    <p className="text-blue-600 text-center mb-3">{member.role}</p>
-                    <p className="text-gray-600 text-center">{member.bio}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        </motion.section>
+        
 
         {/* Contact Section */}
         <section className="py-16 px-6 md:px-10 lg:px-20 bg-blue-900 text-white">

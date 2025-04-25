@@ -13,7 +13,7 @@ import Navbar from "@/components/Navbar";
 export default function DashboardPage() {
     const [telegramJobs, setTelegramJobs] = useState([]);
     const [timesJobs, setTimesJobs] = useState([]);
-    const [activeTab, setActiveTab] = useState("telegram");
+    const [activeTab, setActiveTab] = useState("times");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     
@@ -58,8 +58,9 @@ export default function DashboardPage() {
                         };
                     });
                     
-                    // Sort jobs by match percentage (highest first)
-                    setTelegramJobs(jobsWithMatch.sort((a, b) => b.matchPercentage - a.matchPercentage));
+                    // Filter out jobs with 0% match and sort remaining by match percentage
+                    const filteredJobs = jobsWithMatch.filter(job => job.matchPercentage > 0);
+                    setTelegramJobs(filteredJobs.sort((a, b) => b.matchPercentage - a.matchPercentage));
                 }
                 
                 if (timesRes.success) {
@@ -80,8 +81,9 @@ export default function DashboardPage() {
                         };
                     });
                     
-                    // Sort jobs by match percentage (highest first)
-                    setTimesJobs(jobsWithMatch.sort((a, b) => b.matchPercentage - a.matchPercentage));
+                    // Filter out jobs with 0% match and sort remaining by match percentage
+                    const filteredJobs = jobsWithMatch.filter(job => job.matchPercentage > 0);
+                    setTimesJobs(filteredJobs.sort((a, b) => b.matchPercentage - a.matchPercentage));
                 }
                 
                 setLoading(false);
@@ -158,14 +160,6 @@ export default function DashboardPage() {
                     <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
                         <div className="flex justify-between items-center">
                             <h1 className="text-2xl font-bold text-gray-900">Job Dashboard</h1>
-                            {/* <div className="flex gap-4 items-center">
-                                <button
-                                    onClick={handleLogout}
-                                    className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
-                                >
-                                    Logout
-                                </button>
-                            </div> */}
                         </div>
                     </div>
                 </header>
@@ -212,7 +206,7 @@ export default function DashboardPage() {
                                             : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                                     } w-1/2 py-4 px-1 text-center border-b-2 font-medium text-sm sm:text-base`}
                                 >
-                                    Times Jobs
+                                    Web Portals
                                 </button>
                             </nav>
                         </div>
@@ -239,7 +233,7 @@ export default function DashboardPage() {
                                   ))
                             ) : (
                                 <div className="col-span-full text-center py-10">
-                                    No jobs found in this category
+                                    No matching jobs found
                                 </div>
                             )}
                         </div>
