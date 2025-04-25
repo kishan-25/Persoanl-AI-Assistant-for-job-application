@@ -105,9 +105,11 @@ export default function Home() {
   </div>
 
   <div className="mt-4 flex justify-center">
+    <Link href="/dashboard">
     <button className="bg-purple-700 hover:bg-purple-800 text-white font-semibold py-2 px-6 rounded-lg transition duration-300">
       Browse Jobs
     </button>
+    </Link>
   </div>
 </main>
    
