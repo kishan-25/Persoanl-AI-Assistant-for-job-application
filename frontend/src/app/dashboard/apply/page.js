@@ -1,17 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useSelector } from "react-redux";
 import { generateCoverLetter } from "@/services/coverLetterService";
 import { fetchTelegramJobs, fetchTimesJobs } from "@/services/jobService";
 import { trackJobApplication } from "@/services/applicationService";
-import Link from "next/link";
 
 // Import the getToken function
 import { getToken } from "@/services/authService";
 
-export default function ApplyPage() {
+// Loading component for Suspense fallback
+function LoadingState() {
+  return <div className="p-6">Loading job details...</div>;
+}
+
+// Main component wrapped in Suspense
+function ApplyPageContent() {
   const searchParams = useSearchParams();
   const jobId = searchParams.get("jobId");
   const source = searchParams.get("source");
@@ -162,5 +167,14 @@ export default function ApplyPage() {
         </div>
       )}
     </div>
+  );
+}
+
+// Main component export
+export default function ApplyPage() {
+  return (
+    <Suspense fallback={<LoadingState />}>
+      <ApplyPageContent />
+    </Suspense>
   );
 }
