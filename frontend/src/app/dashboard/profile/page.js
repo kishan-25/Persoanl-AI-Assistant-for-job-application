@@ -147,7 +147,7 @@ export default function ProfilePage() {
               <p>Loading your applications...</p>
             ) : applications.length === 0 ? (
               <div className="text-center py-10">
-                <p className="text-gray-500">You haven't applied to any jobs yet.</p>
+                <p className="text-gray-500">You havenot applied to any jobs yet.</p>
                 <Link href="/dashboard/jobs">
                   <button className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
                     Browse Jobs
