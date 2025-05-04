@@ -176,5 +176,5 @@ export default function ApplyPage() {
     <Suspense fallback={<LoadingState />}>
       <ApplyPageContent />
     </Suspense>
-  );
+  );    
 }
