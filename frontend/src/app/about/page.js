@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import Head from 'next/head';
 import { motion } from 'framer-motion';
+import { Github, Linkedin, Twitter } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 
 export default function About() {
