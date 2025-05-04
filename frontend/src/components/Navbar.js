@@ -37,7 +37,9 @@ export default function Navbar() {
     // Update Redux state
     dispatch(logout());
     // Redirect to home page
-    router.push("/");
+    setTimeout(() => {
+      router.push("/");
+    }, 100);
     // Close mobile menu if open
     if (isMenuOpen) setIsMenuOpen(false);
   };

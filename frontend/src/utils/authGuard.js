@@ -28,7 +28,7 @@ export default function AuthGuard({ children }) {
             setIsLoading(false);
         } else {
             // No user data found anywhere, redirect to login
-            router.push("/login");
+            router.push("/");
         }
     }, [user, router, dispatch]);
 

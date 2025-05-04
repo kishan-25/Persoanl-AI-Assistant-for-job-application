@@ -26,7 +26,7 @@ export default function DashboardPage() {
 
     const handleLogout = () => {
         dispatch(logout());
-        router.push("/login");
+        router.push("/");
     };
 
     // Using correct job skill matching logic
