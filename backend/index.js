@@ -16,7 +16,7 @@ const generateCoverLetterRoute = require("./routes/generateCoverLetter");
 
 const app = express();
 app.use(cors({
-    origin: ["http://localhost:3000", "http://127.0.0.1:3000", "https://talentalign-backend.onrender.com"], // Add your frontend URLs
+    origin: ["http://localhost:3000", "http://127.0.0.1:3000", "https://talentalign.vercel.app/"], // Add your frontend URLs
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true
