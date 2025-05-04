@@ -6,8 +6,6 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import Typewriter from "typewriter-effect";
-import CountUp from "react-countup";
 import { FiArrowRight, FiCheckCircle, FiClock, FiSettings, FiUser } from "react-icons/fi";
 
 export default function Home() {
@@ -16,11 +14,8 @@ export default function Home() {
   const [dots, setDots] = useState([]);
   
   useEffect(() => {
-    // Set isLoaded to true immediately to ensure the background is visible right away
     setIsLoaded(true);
-    
-    // Generate dots only on the client side to avoid hydration mismatch
-    const newDots = Array.from({ length: 50 }).map(() => ({
+      const newDots = Array.from({ length: 50 }).map(() => ({
       left: `${Math.random() * 100}%`,
       top: `${Math.random() * 100}%`,
       delay: Math.random() * 5,

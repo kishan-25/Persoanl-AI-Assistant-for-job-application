@@ -1,4 +1,3 @@
-// frontend/src/dashboard/profile/edit/page.js
 "use client";
 
 import { useState } from "react";
