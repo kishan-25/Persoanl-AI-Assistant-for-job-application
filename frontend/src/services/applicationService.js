@@ -1,10 +1,10 @@
-// frontend/src/services/applicationService.js
 "use client";
 
 import axios from "axios";
 import { getToken } from "./authService";
 
-const API_URL = "http://localhost:5000/api/v1/applications";
+// const API_URL = "http://localhost:5000/api/v1/applications";
+const API_URL = "https://talentalign-backend.onrender.com/api/v1/application";
 
 export const trackJobApplication = async (jobData) => {
   try {

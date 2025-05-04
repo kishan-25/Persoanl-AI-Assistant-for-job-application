@@ -1,7 +1,7 @@
-// src/services/coverLetterService.js
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/v1/cover-letter";
+// const API_URL = "http://localhost:5000/api/v1/cover-letter";
+const API_URL = "https://talentalign-backend.onrender.com/api/v1/cover-Letter";
 
 export const generateCoverLetter = async (payload, token) => {
   try {
