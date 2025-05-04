@@ -1,7 +1,6 @@
 {
   "dependencies": {
     "concurrently": "^9.1.2"
-   
   },
   "scripts": {
     "dev": "concurrently -n \"frontend,backend\" -c \"bgBlue,bgGreen\" \"cd frontend && npm run dev\" \"cd backend && nodemon index.js\""
