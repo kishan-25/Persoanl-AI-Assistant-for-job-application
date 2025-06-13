@@ -39,7 +39,7 @@ jobs_container = driver.find_elements(By.XPATH, '//ul[@class="ui-content search-
 # Initialize list for storing job details
 jobs_data = []
 
-print("\n📌 **Extracted Job Listings**:\n")
+print("\n **Extracted Job Listings**:\n")
 
 for i, job in enumerate(jobs_container, 1):
     try:
